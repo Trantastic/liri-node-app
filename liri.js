@@ -40,8 +40,15 @@ else if(nodeArg[2] === "spotify-this-song"){
 			console.log("Error occurred: " + error);
 		}
 
-	var spotifySong = data.tracks.items[0].album;
-	console.log(spotifySong);
+	var songArtist = data.tracks.items[0].album.artists[0].name;
+	var songName = data.tracks.items[0].name;
+	var songPreview = data.tracks.items[0].external_urls.spotify;
+	var songAlbum = data.tracks.items[0].album.name;
+
+	console.log("Artist: " + songArtist);
+	console.log("Song Name: " + songName);
+	console.log("Song Preview: " + songPreview);
+	console.log("Album: " + songAlbum);
 	});
 }
 
