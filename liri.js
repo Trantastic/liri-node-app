@@ -1,13 +1,13 @@
 var nodeArg = process.argv;
+var keys = require("./keys.js");
+var fs = require("fs");
 
 //my-tweets command
 if(nodeArg[2] === "my-tweets"){
 	// JSON package
 	var Twitter = require("twitter");
-	// twitter keys & tokens
-	var twitKeys = require("./keys.js");
+	var tweets = new Twitter(keys.twitterKeys);
 
-	var tweets = new Twitter(twitKeys);
 	// Search parameters
 	var params = {screen_name: "Trantastic50", count: "20"};
 
@@ -25,17 +25,27 @@ if(nodeArg[2] === "my-tweets"){
 // spotify-this-song command
 else if(nodeArg[2] === "spotify-this-song"){
 	var Spotify = require("node-spotify-api");
-	// var spotKeys = require("./keys.js");
-	// var song = new Spotify(spotKeys);
 
-	var songArg = process.argv[3];
+	var spotify = new Spotify(keys.spotifyKeys);
+	var songTitle = "";
+	var songArtist;
 
-	var spotify = new Spotify({
-  		id: '396f04035d2042c8b6a798d280cbd990',
-  		secret: '91b4f8a7ebbb43ebb1fac5e8f12a82ad'
-	});
+	// Piecing together song titles longer than 1 word
+	for(var i = 3; i < nodeArg.length; i++){
+		if(i > 3 && i < nodeArg.length){
+			songTitle = songTitle + " " + nodeArg[i];
+		}
+		else if(songTitle === ""){
+			songTitle = "The Sign";
+			songArtist = ""
 
-	spotify.search({type: "track", query: songArg}, function(error, data){
+		}
+		else{
+			songTitle += nodeArg[i];
+		}
+	}
+
+	spotify.search({type: "track", query: songTitle}, function(error, data){
 		if(error){
 			console.log("Error occurred: " + error);
 		}
@@ -61,7 +71,8 @@ else if(nodeArg[2] === "movie-this"){
 	for(var i = 3; i < nodeArg.length; i++){
 		if(i > 3 && i < nodeArg.length){
 			movieTitle = movieTitle + "+" + nodeArg[i];
-		}else{
+		}
+		else{
 			movieTitle += nodeArg[i];
 		}
 	}
@@ -86,12 +97,17 @@ else if(nodeArg[2] === "movie-this"){
 
 // do-what-it-says command
 else if(nodeArg[2] === "do-what-it-says"){
-	fs = require("fs");
-
-	fs.readFile("random.txt", "utf8", function(error, response, data){
+	fs.readFile("./random.txt", function(error, response, data){
 		if(error){
 			console.log("Error occurred: " + error);
 		}
+		// var dataArr = data.split(",");
 		console.log(data);
 	});
+	// fs.exists("./random.txt", function(fileok){
+	//   if(fileok)fs.readFile("./random.txt", function(error, data) {
+	//     console.log("Contents: " + data);
+	//   });
+	//   else console.log("file not found");
+		// });
 }
