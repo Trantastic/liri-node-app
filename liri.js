@@ -14,22 +14,20 @@ switch(userCommand){
 		displayMovie();
 		break;
 	case "do-what-it-says":
-		initCommand();
+		randomCommand();
 		break;
 }
 
 //my-tweets command
 function displayTweets(){
-	// JSON package
 	var Twitter = require("twitter");
 	var tweets = new Twitter(keys.twitterKeys);
-
 	// Search parameters
 	var params = {screen_name: "Trantastic50", count: "20"};
 
 	tweets.get("statuses/user_timeline", params, function(error, tweet, response){
 		if(error){
-			console.log(error);
+			console.log("Error occurred: " + error);
 		}
 		for(var i = 0; i < tweet.length; i++){
 			console.log(tweet[i].created_at);
@@ -41,24 +39,23 @@ function displayTweets(){
 // spotify-this-song command
 function displaySong(){
 	var Spotify = require("node-spotify-api");
-
 	var spotify = new Spotify(keys.spotifyKeys);
 	var songTitle = "";
-	var songArtist;
 
 	// Piecing together song titles longer than 1 word
 	for(var i = 3; i < nodeArg.length; i++){
 		if(i > 3 && i < nodeArg.length){
 			songTitle = songTitle + " " + nodeArg[i];
+			console.log("first");
 		}
-		// else if(songTitle === ""){
-		// 	songTitle = "The Sign";
-		// 	songArtist = ""
-
-		// }
-		else{
+		else if(nodeArg.length <= 4){
 			songTitle += nodeArg[i];
+			console.log("second");
 		}
+	}
+	// If song is blank, default to this
+	if(songTitle.length === 0){
+		songTitle = "The Sign Ace of Base";
 	}
 
 	spotify.search({type: "track", query: songTitle}, function(error, data){
@@ -94,6 +91,10 @@ function displayMovie(){
 			movieTitle += nodeArg[i];
 		}
 	}
+	// If movie title is blank, default to this
+	if(movieTitle.length === 0){
+		movieTitle = "Mr. Nobody";
+	}
 
 	var queryUrl = "http://www.omdbapi.com/?t=" + movieTitle + "&y=&plot=short&apikey=40e9cece";
 
@@ -115,18 +116,19 @@ function displayMovie(){
 }
 
 // do-what-it-says command
-function initCommand(){
-	fs.readFile("./random.txt", function(error, response, data){
+function randomCommand(){
+	fs.readFile("./random.txt", "utf-8", function(error, data){
 		if(error){
 			console.log("Error occurred: " + error);
 		}
-		// var dataArr = data.split(",");
-		console.log(data);
+		// var dataArr = response.split(",");
+
+		displaySong(data);
 	});
-	fs.exists("./random.txt", function(fileok){
-	  if(fileok)fs.readFile("./random.txt", function(error, data) {
-	    console.log("Contents: " + data);
-	  });
-	  else console.log("file not found");
-		});
+	// fs.exists("./random.txt", function(fileok){
+	//   if(fileok)fs.readFile("./random.txt", function(error, data) {
+	//     console.log("Contents: " + data);
+	//   });
+	//   else console.log("file not found");
+	// 	});
 }
