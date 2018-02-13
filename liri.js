@@ -1,9 +1,25 @@
 var nodeArg = process.argv;
+var userCommand = process.argv[2];
 var keys = require("./keys.js");
 var fs = require("fs");
 
+switch(userCommand){
+	case "my-tweets":
+		displayTweets();
+		break;
+	case "spotify-this-song":
+		displaySong();
+		break;
+	case "movie-this":
+		displayMovie();
+		break;
+	case "do-what-it-says":
+		initCommand();
+		break;
+}
+
 //my-tweets command
-if(nodeArg[2] === "my-tweets"){
+function displayTweets(){
 	// JSON package
 	var Twitter = require("twitter");
 	var tweets = new Twitter(keys.twitterKeys);
@@ -23,7 +39,7 @@ if(nodeArg[2] === "my-tweets"){
 }
 
 // spotify-this-song command
-else if(nodeArg[2] === "spotify-this-song"){
+function displaySong(){
 	var Spotify = require("node-spotify-api");
 
 	var spotify = new Spotify(keys.spotifyKeys);
@@ -35,11 +51,11 @@ else if(nodeArg[2] === "spotify-this-song"){
 		if(i > 3 && i < nodeArg.length){
 			songTitle = songTitle + " " + nodeArg[i];
 		}
-		else if(songTitle === ""){
-			songTitle = "The Sign";
-			songArtist = ""
+		// else if(songTitle === ""){
+		// 	songTitle = "The Sign";
+		// 	songArtist = ""
 
-		}
+		// }
 		else{
 			songTitle += nodeArg[i];
 		}
@@ -50,20 +66,22 @@ else if(nodeArg[2] === "spotify-this-song"){
 			console.log("Error occurred: " + error);
 		}
 
-	var songArtist = data.tracks.items[0].album.artists[0].name;
-	var songName = data.tracks.items[0].name;
-	var songPreview = data.tracks.items[0].external_urls.spotify;
-	var songAlbum = data.tracks.items[0].album.name;
+		var songArtist = data.tracks.items[0].album.artists[0].name;
+		var songName = data.tracks.items[0].name;
+		var songPreview = data.tracks.items[0].external_urls.spotify;
+		var songAlbum = data.tracks.items[0].album.name;
 
-	console.log("Artist: " + songArtist);
-	console.log("Song Name: " + songName);
-	console.log("Song Preview: " + songPreview);
-	console.log("Album: " + songAlbum);
+		console.log(
+			"Artist: " + songArtist +
+			"\nSong Name: " + songName +
+			"\nSong Preview: " + songPreview +
+			"\nAlbum: " + songAlbum
+		);
 	});
 }
 
 // movie-this command
-else if(nodeArg[2] === "movie-this"){
+function displayMovie(){
 	var request = require("request");
 	var movieTitle = "";
 
@@ -81,22 +99,23 @@ else if(nodeArg[2] === "movie-this"){
 
 	// Makes request to OMDB API for movie
 	request(queryUrl, function(error, response, body){
-
 		if(!error && response.statusCode === 200){
-			console.log("Title: " + JSON.parse(body).Title);
-			console.log("Year: " + JSON.parse(body).Year);
-			console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-			console.log("Rotten Tomato Rating: " + JSON.parse(body).Ratings[1].Value);
-			console.log("Country of Production: " + JSON.parse(body).Country);
-			console.log("Language: " + JSON.parse(body).Language);
-			console.log("Plot: " + JSON.parse(body).Plot);
-			console.log("Actors: " + JSON.parse(body).Actors);
+			console.log(
+				"Title: " + JSON.parse(body).Title +
+				"\nYear: " + JSON.parse(body).Year +
+				"\nIMDB Rating: " + JSON.parse(body).imdbRating +
+				"\nRotten Tomato Rating: " + JSON.parse(body).Ratings[1].Value +
+				"\nCountry of Production: " + JSON.parse(body).Country +
+				"\nLanguage: " + JSON.parse(body).Language +
+				"\nPlot: " + JSON.parse(body).Plot +
+				"\nActors: " + JSON.parse(body).Actors
+			);
 		}
 	});
 }
 
 // do-what-it-says command
-else if(nodeArg[2] === "do-what-it-says"){
+function initCommand(){
 	fs.readFile("./random.txt", function(error, response, data){
 		if(error){
 			console.log("Error occurred: " + error);
@@ -104,10 +123,10 @@ else if(nodeArg[2] === "do-what-it-says"){
 		// var dataArr = data.split(",");
 		console.log(data);
 	});
-	// fs.exists("./random.txt", function(fileok){
-	//   if(fileok)fs.readFile("./random.txt", function(error, data) {
-	//     console.log("Contents: " + data);
-	//   });
-	//   else console.log("file not found");
-		// });
+	fs.exists("./random.txt", function(fileok){
+	  if(fileok)fs.readFile("./random.txt", function(error, data) {
+	    console.log("Contents: " + data);
+	  });
+	  else console.log("file not found");
+		});
 }
