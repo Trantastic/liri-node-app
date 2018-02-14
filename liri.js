@@ -2,13 +2,22 @@ var nodeArg = process.argv;
 var userCommand = process.argv[2];
 var keys = require("./keys.js");
 var fs = require("fs");
+var songTitle = "";
 
 switch(userCommand){
 	case "my-tweets":
 		displayTweets();
 		break;
 	case "spotify-this-song":
-		displaySong();
+		for(var i = 3; i < nodeArg.length; i++){
+			if(i > 3 && i < nodeArg.length){
+				songTitle = songTitle + " " + nodeArg[i];
+			}
+			else{
+				songTitle += nodeArg[i];
+			}
+		}
+		displaySong(songTitle);
 		break;
 	case "movie-this":
 		displayMovie();
@@ -37,22 +46,15 @@ function displayTweets(){
 }
 
 // spotify-this-song command
-function displaySong(){
+function displaySong(songName){
 	var Spotify = require("node-spotify-api");
 	var spotify = new Spotify(keys.spotifyKeys);
-	var songTitle = "";
 
-	// Piecing together song titles longer than 1 word
-	for(var i = 3; i < nodeArg.length; i++){
-		if(i > 3 && i < nodeArg.length){
-			songTitle = songTitle + " " + nodeArg[i];
-		}
-		else if(nodeArg.length <= 4){
-			songTitle += nodeArg[i];
-		}
+	if(songName){
+		songTitle = songName;
 	}
 	// If song is blank, default to this
-	if(songTitle.length === 0 && songTitle.length != 1){
+	else{
 		songTitle = "The Sign Ace of Base";
 	}
 
@@ -65,8 +67,6 @@ function displaySong(){
 		var songName = data.tracks.items[0].name;
 		var songPreview = data.tracks.items[0].external_urls.spotify;
 		var songAlbum = data.tracks.items[0].album.name;
-
-		console.log(songTitle);
 
 		console.log(
 			"Artist: " + songArtist +
@@ -123,8 +123,7 @@ function randomCommand(){
 		}
 
 		var dataArr = data.split(",");
-		console.log(dataArr);
-		displaySong(dataArr[2]);
 
+		displaySong(dataArr[1]);
 	});
 }
