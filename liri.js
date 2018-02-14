@@ -46,15 +46,13 @@ function displaySong(){
 	for(var i = 3; i < nodeArg.length; i++){
 		if(i > 3 && i < nodeArg.length){
 			songTitle = songTitle + " " + nodeArg[i];
-			console.log("first");
 		}
 		else if(nodeArg.length <= 4){
 			songTitle += nodeArg[i];
-			console.log("second");
 		}
 	}
 	// If song is blank, default to this
-	if(songTitle.length === 0){
+	if(songTitle.length === 0 && songTitle.length != 1){
 		songTitle = "The Sign Ace of Base";
 	}
 
@@ -67,6 +65,8 @@ function displaySong(){
 		var songName = data.tracks.items[0].name;
 		var songPreview = data.tracks.items[0].external_urls.spotify;
 		var songAlbum = data.tracks.items[0].album.name;
+
+		console.log(songTitle);
 
 		console.log(
 			"Artist: " + songArtist +
@@ -121,14 +121,10 @@ function randomCommand(){
 		if(error){
 			console.log("Error occurred: " + error);
 		}
-		// var dataArr = response.split(",");
 
-		displaySong(data);
+		var dataArr = data.split(",");
+		console.log(dataArr);
+		displaySong(dataArr[2]);
+
 	});
-	// fs.exists("./random.txt", function(fileok){
-	//   if(fileok)fs.readFile("./random.txt", function(error, data) {
-	//     console.log("Contents: " + data);
-	//   });
-	//   else console.log("file not found");
-	// 	});
 }
