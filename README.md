@@ -1,5 +1,9 @@
 # liri-node-app
 
+__Description:__
+
+This nodeJS app, liri (Language Interpretation and Recognition Interface), will take in any 4 commands in your terminal and execute them.
+
 __Instructions:__ 
 
 This app works through your computer's terminal. Be sure to npm install [twitter](https://www.npmjs.com/package/twitter), [spotify](https://www.npmjs.com/package/node-spotify-api), and [request](https://www.npmjs.com/package/request) for this app to function correctly.
