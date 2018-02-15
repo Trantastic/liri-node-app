@@ -10,7 +10,7 @@ This app works through your computer's terminal. Be sure to npm install [twitter
 
 __Commands:__
 
-Use these commands to make liri do stuff!
+In your terminal type: node liri.js [any command below]
 
 * do-what-it-says
   * Initiates command from random.txt file.
